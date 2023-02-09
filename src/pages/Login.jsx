@@ -31,6 +31,11 @@ export default class Login extends Component {
     return data.token;
   };
 
+  refresh = () => {
+    const { history } = this.props;
+    history.push('/Config');
+  };
+
   handleClick = async (e) => {
     e.preventDefault();
     const tokenAPI = await this.fetchAPI();
@@ -42,8 +47,8 @@ export default class Login extends Component {
 
   render() {
     const { isValid } = this.state;
+    const { history } = this.props;
     return (
-
       <div>
         <form>
           <input
@@ -67,6 +72,13 @@ export default class Login extends Component {
             onClick={ this.handleClick }
           >
             Play
+          </button>
+          <button
+            data-testid="btn-settings"
+            type="button"
+            onClick={ this.refresh }
+          >
+            Configurações
           </button>
         </form>
       </div>
