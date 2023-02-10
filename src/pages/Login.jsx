@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
+import { updateEmail, updateUsername } from '../redux/actions';
 
-export default class Login extends Component {
+class Login extends React.Component {
   state = {
     email: '',
     userName: '',
@@ -38,16 +40,17 @@ export default class Login extends Component {
 
   handleClick = async (e) => {
     e.preventDefault();
+    const { dispatch, history } = this.props;
+    const { email, userName } = this.state;
     const tokenAPI = await this.fetchAPI();
-    const { history } = this.props;
     localStorage.setItem('token', tokenAPI);
-    console.log();
+    dispatch(updateEmail(email));
+    dispatch(updateUsername(userName));
     history.push('/Game');
   };
 
   render() {
     const { isValid } = this.state;
-    const { history } = this.props;
     return (
       <div>
         <form>
@@ -91,3 +94,5 @@ Login.propTypes = {
     push: PropTypes.func,
   }),
 }.isRequired;
+
+export default connect()(Login);
