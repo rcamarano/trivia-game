@@ -2,11 +2,15 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Header from '../components/Header';
 import requestGameApi from './requestApi/requestApi';
+import '../App.css';
 
 class Game extends Component {
   state = {
     gameApi: [],
     responseApi: false,
+    collorGreen: '',
+    collorRed: '',
+    mathRandom: [],
   };
 
   componentDidMount() {
@@ -23,17 +27,30 @@ class Game extends Component {
     if (apiData.response_code === codeError) {
       localStorage.removeItem('token');
       history.push('/');
+      return;
     }
+    const numbeRandom = 0.5;
+
     this.setState({
       gameApi: apiData.results,
       responseApi: true,
+      mathRandom: [
+        apiData.results[0].correct_answer,
+        ...apiData.results[0].incorrect_answers,
+      ].sort(() => Math.random() - numbeRandom),
+    });
+  };
+
+  handleStyle = () => {
+    this.setState({
+      collorGreen: 'green-border',
+      collorRed: 'red-border',
     });
   };
 
   render() {
-    const { gameApi, responseApi } = this.state;
+    const { gameApi, responseApi, collorGreen, collorRed, mathRandom } = this.state;
     const question = gameApi[0];
-    const numbeRandom = 0.5;
     return (
       <div>
         <Header />
@@ -47,24 +64,25 @@ class Game extends Component {
                   {question.question}
                 </h2>
                 <div data-testid="answer-options">
-                  {[
-                    question.correct_answer,
-                    ...question.incorrect_answers,
-                  ].sort(() => Math.random() - numbeRandom).map((answer, i) => (
-                    answer === question.correct_answer
+                  { mathRandom.map((answer, i) => (
+                    answer === question?.correct_answer
                       ? (
                         <button
+                          className={ collorGreen }
                           type="button"
                           data-testid="correct-answer"
                           key={ i }
+                          onClick={ this.handleStyle }
                         >
                           {(answer)}
                         </button>)
                       : (
                         <button
+                          className={ collorRed }
                           type="button"
                           data-testid={ `wrong-answer-${i}` }
                           key={ i }
+                          onClick={ this.handleStyle }
                         >
                           {(answer)}
                         </button>)
