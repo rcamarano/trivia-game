@@ -11,9 +11,12 @@ class Game extends Component {
     collorGreen: '',
     collorRed: '',
     mathRandom: [],
+    isDisabled: false,
   };
 
   componentDidMount() {
+    const timer = 30000;
+    setTimeout(() => this.setState({ isDisabled: true }), timer);
     this.startingGame();
   }
 
@@ -49,7 +52,8 @@ class Game extends Component {
   };
 
   render() {
-    const { gameApi, responseApi, collorGreen, collorRed, mathRandom } = this.state;
+    const { gameApi, responseApi, collorGreen, collorRed,
+      mathRandom, isDisabled } = this.state;
     const question = gameApi[0];
     return (
       <div>
@@ -73,6 +77,7 @@ class Game extends Component {
                           data-testid="correct-answer"
                           key={ i }
                           onClick={ this.handleStyle }
+                          disabled={ isDisabled }
                         >
                           {(answer)}
                         </button>)
@@ -83,6 +88,7 @@ class Game extends Component {
                           data-testid={ `wrong-answer-${i}` }
                           key={ i }
                           onClick={ this.handleStyle }
+                          disabled={ isDisabled }
                         >
                           {(answer)}
                         </button>)
