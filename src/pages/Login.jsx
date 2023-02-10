@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { updateEmail, updateUsername } from '../redux/actions';
+import requestToken from './requestApi/requestToken';
 
 class Login extends React.Component {
   state = {
@@ -27,12 +28,6 @@ class Login extends React.Component {
     });
   };
 
-  fetchAPI = async () => {
-    const response = await fetch('https://opentdb.com/api_token.php?command=request');
-    const data = await response.json();
-    return data.token;
-  };
-
   refresh = () => {
     const { history } = this.props;
     history.push('/Config');
@@ -42,7 +37,7 @@ class Login extends React.Component {
     e.preventDefault();
     const { dispatch, history } = this.props;
     const { email, userName } = this.state;
-    const tokenAPI = await this.fetchAPI();
+    const tokenAPI = await requestToken();
     localStorage.setItem('token', tokenAPI);
     dispatch(updateEmail(email));
     dispatch(updateUsername(userName));
