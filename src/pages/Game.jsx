@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Header from '../components/Header';
 import requestGameApi from './requestApi/requestApi';
 import '../App.css';
+import { updateScore } from '../redux/actions';
 
 class Game extends Component {
   state = {
@@ -12,13 +14,34 @@ class Game extends Component {
     collorRed: '',
     mathRandom: [],
     isDisabled: false,
+    // score: 0,
+    gameDifficulty: 0,
+    timeLeft: 30,
   };
 
   componentDidMount() {
-    const timer = 30000;
-    setTimeout(() => this.setState({ isDisabled: true }), timer);
+    this.startTimer();
     this.startingGame();
   }
+
+  startTimer = () => {
+    const thousand = 1000;
+    this.interval = setInterval(() => {
+      const { timeLeft } = this.state;
+      if (timeLeft > 0) {
+        this.setState((prevState) => ({
+          timeLeft: prevState.timeLeft - 1,
+        }));
+      } else {
+        clearInterval(this.interval);
+        console.log('Entrou.');
+      }
+    }, thousand);
+  };
+
+  stopTimer = () => {
+    clearInterval(this.interval);
+  };
 
   startingGame = async () => {
     const { history } = this.props;
@@ -44,19 +67,61 @@ class Game extends Component {
     });
   };
 
-  handleStyle = () => {
+  compareDifficulty = async (difficulty) => {
+    if (difficulty === 'hard') {
+      await this.setState({
+        gameDifficulty: 3,
+      });
+    } else if (difficulty === 'medium') {
+      await this.setState({
+        gameDifficulty: 2,
+      });
+    } else if (difficulty === 'easy') {
+      await this.setState({
+        gameDifficulty: 1,
+      });
+    }
+  };
+
+  handleStyle = async ({ id }, difficulty) => {
+    const { dispatch } = this.props;
+    const { timeLeft } = this.state;
+    console.log(id);
     this.setState({
       collorGreen: 'green-border',
       collorRed: 'red-border',
     });
+    await this.compareDifficulty(difficulty);
+    this.stopTimer();
+
+    const correctAnswer = 10;
+    const wrongAnswer = 0;
+
+    const { gameDifficulty } = this.state;
+
+    if (id === 'correct') {
+      const totalValue = correctAnswer + (timeLeft * gameDifficulty);
+      return dispatch(updateScore(totalValue));
+    } if (id === 'wrong') {
+      const totalValue = wrongAnswer;
+      return dispatch(updateScore(totalValue));
+    }
   };
 
   render() {
     const { gameApi, responseApi, collorGreen, collorRed,
-      mathRandom, isDisabled } = this.state;
+      mathRandom, isDisabled, timeLeft } = this.state;
     const question = gameApi[0];
+
+    if (timeLeft === 0) {
+      this.setState({
+        isDisabled: true,
+      });
+    }
+
     return (
       <div>
+        {timeLeft}
         <Header />
         { responseApi
             && (
@@ -73,10 +138,13 @@ class Game extends Component {
                       ? (
                         <button
                           className={ collorGreen }
+                          id="correct"
                           type="button"
                           data-testid="correct-answer"
                           key={ i }
-                          onClick={ this.handleStyle }
+                          onClick={
+                            ({ target }) => this.handleStyle(target, question.difficulty)
+                          }
                           disabled={ isDisabled }
                         >
                           {(answer)}
@@ -84,10 +152,13 @@ class Game extends Component {
                       : (
                         <button
                           className={ collorRed }
+                          id="wrong"
                           type="button"
                           data-testid={ `wrong-answer-${i}` }
                           key={ i }
-                          onClick={ this.handleStyle }
+                          onClick={
+                            ({ target }) => this.handleStyle(target, question.difficulty)
+                          }
                           disabled={ isDisabled }
                         >
                           {(answer)}
@@ -101,8 +172,14 @@ class Game extends Component {
 }
 
 Game.propTypes = {
+  dispatch: PropTypes.func,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
-};
-export default Game;
+}.isRequired;
+
+const mapStateToProps = (state) => ({
+  score: state.player.score,
+});
+
+export default connect(mapStateToProps)(Game);
