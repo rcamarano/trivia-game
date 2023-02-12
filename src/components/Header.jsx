@@ -23,8 +23,6 @@ class Header extends Component {
           <span
             data-testid="header-score"
           >
-            Placar:
-            {' '}
             {score}
           </span>
         </header>
