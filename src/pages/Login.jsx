@@ -50,7 +50,7 @@ class Login extends React.Component {
     /* const { history } = this.props; */
     return (
       <div>
-        <form>
+        <form data-testid="form">
           <input
             data-testid="input-gravatar-email"
             type="email"

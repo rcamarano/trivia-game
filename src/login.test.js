@@ -5,6 +5,7 @@ import { act } from 'react-dom/test-utils';
 import { renderWithRouterAndRedux } from './tests/helpers/renderWithRouterAndRedux';
 import reducers from './redux/reducers';
 import Login from './pages/Login';
+import App from './App';
 import requestToken from './pages/requestApi/requestToken';
 import requestApi from './pages/requestApi/requestApi';
 
@@ -67,12 +68,30 @@ describe('Teste o componente <Login.js />', () => {
     expect(typeof requestToken).toBe('function');
   });
 
-  it('o fetch retorna dados do endpoint https://opentdb.com/api_token.php?command=request', () => {
-    expect(requestToken()).resolves.to();
-  });
+  it('testa a requisção para a API', async () => {
+    const mockedObject = [{ // cria um objeto com as informações que queremos que sejam retornadas pelo mock.
+      response_code: 0,
+      response_message: 'Token Generated Successfully!',
+      token: 'f00cb469ce38726ee00a7c6836761b0a4fb808181a125dcde6d50a9f3c9127b6',
+    }];
+    const { history } = renderWithRouterAndRedux(<App />); // Renderiza a aplicação
 
-  test('the data is peanut butter', async () => {
-    const data = await requestToken();
-    expect(data).toBeTruthy();
+    jest.spyOn(global, 'fetch'); // cria o mock para o global.fetch, primeiro a jest.spyOn e depois a função mockResolvedValue duas vezes, pois a função fetch retorna primeiro um objeto que possui um método `.json`
+    global.fetch = jest.fn().mockResolvedValue({ //  e o método `.json` retorna o resultado da API.
+      json: jest.fn().mockResolvedValue(mockedObject),
+    });
+
+    const inputEmail = screen.getByTestId(/input-gravatar-email/i);
+    const inputName = screen.getByTestId(/input-player-name/i);
+    const btnPlay = screen.getByTestId(/btn-play/i);
+
+    userEvent.type(inputEmail, 'userName@email.com');
+    expect(btnPlay).toBeDefined();
+    userEvent.type(inputName, 'userName');
+    expect(btnPlay).toBeEnabled();
+    userEvent.click(btnPlay);
+    await waitFor(() => {
+      erxpect(history.location.pathname).toBe('/Game');
+    });
   });
 });
