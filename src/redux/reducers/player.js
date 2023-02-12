@@ -23,7 +23,7 @@ const player = (state = INITIAL_STATE, action) => {
   case UPDATE_SCORE:
     return {
       ...state,
-      score: action.score,
+      score: state.score + action.score,
     };
   default:
     return state;

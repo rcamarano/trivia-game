@@ -8,15 +8,17 @@ import { updateScore } from '../redux/actions';
 
 class Game extends Component {
   state = {
-    gameApi: [],
     responseApi: false,
     collorGreen: '',
     collorRed: '',
-    mathRandom: [],
     isDisabled: false,
     // score: 0,
     gameDifficulty: 0,
     timeLeft: 30,
+    buttonClicked: false,
+    questionIndex: 0,
+    question: [],
+
   };
 
   componentDidMount() {
@@ -34,7 +36,6 @@ class Game extends Component {
         }));
       } else {
         clearInterval(this.interval);
-        console.log('Entrou.');
       }
     }, thousand);
   };
@@ -47,24 +48,32 @@ class Game extends Component {
     const { history } = this.props;
     const codeError = 3;
     const token = localStorage.getItem('token');
-
     const apiData = await requestGameApi(token);
+
+    const results = apiData.results.map((result) => {
+      const answers = this.randomQuestions(
+        result.correct_answer,
+        result.incorrect_answers,
+      );
+      return { ...result, answers };
+    });
 
     if (apiData.response_code === codeError) {
       localStorage.removeItem('token');
       history.push('/');
       return;
     }
-    const numbeRandom = 0.5;
-
     this.setState({
-      gameApi: apiData.results,
       responseApi: true,
-      mathRandom: [
-        apiData.results[0].correct_answer,
-        ...apiData.results[0].incorrect_answers,
-      ].sort(() => Math.random() - numbeRandom),
+      question: results,
     });
+  };
+
+  randomQuestions = (correct, incorrect) => {
+    const arrayQuestions = [correct, ...incorrect];
+    const randomNumber = 0.5;
+    const mathRandom = arrayQuestions.sort(() => Math.random() - randomNumber);
+    return mathRandom;
   };
 
   compareDifficulty = async (difficulty) => {
@@ -72,11 +81,13 @@ class Game extends Component {
       await this.setState({
         gameDifficulty: 3,
       });
-    } else if (difficulty === 'medium') {
+    }
+    if (difficulty === 'medium') {
       await this.setState({
         gameDifficulty: 2,
       });
-    } else if (difficulty === 'easy') {
+    }
+    if (difficulty === 'easy') {
       await this.setState({
         gameDifficulty: 1,
       });
@@ -86,21 +97,23 @@ class Game extends Component {
   handleStyle = async ({ id }, difficulty) => {
     const { dispatch } = this.props;
     const { timeLeft } = this.state;
-    console.log(id);
-    this.setState({
-      collorGreen: 'green-border',
-      collorRed: 'red-border',
-    });
     await this.compareDifficulty(difficulty);
     this.stopTimer();
 
+    this.setState({
+      collorGreen: 'green-border',
+      collorRed: 'red-border',
+      buttonClicked: true,
+    });
+
     const correctAnswer = 10;
     const wrongAnswer = 0;
-
     const { gameDifficulty } = this.state;
 
     if (id === 'correct') {
       const totalValue = correctAnswer + (timeLeft * gameDifficulty);
+      console.log(timeLeft);
+      console.log(gameDifficulty);
       return dispatch(updateScore(totalValue));
     } if (id === 'wrong') {
       const totalValue = wrongAnswer;
@@ -108,11 +121,28 @@ class Game extends Component {
     }
   };
 
-  render() {
-    const { gameApi, responseApi, collorGreen, collorRed,
-      mathRandom, isDisabled, timeLeft } = this.state;
-    const question = gameApi[0];
+  handleNext = () => {
+    const { questionIndex } = this.state;
+    const Numberfive = 5;
+    this.setState({
+      collorGreen: '',
+      collorRed: '',
+      timeLeft: 30,
+    });
+    this.startTimer();
+    if (questionIndex === Numberfive - 1) {
+      const { history } = this.props;
+      history.push('/Feedback');
+    } else if (questionIndex < Numberfive) {
+      this.setState({
+        questionIndex: questionIndex + 1,
+      });
+    }
+  };
 
+  render() {
+    const { question, responseApi, collorGreen, collorRed,
+      isDisabled, timeLeft, buttonClicked, questionIndex } = this.state;
     if (timeLeft === 0) {
       this.setState({
         isDisabled: true,
@@ -127,14 +157,14 @@ class Game extends Component {
             && (
               <div>
                 <h1 data-testid="question-category">
-                  {question.category}
+                  {question[questionIndex].category}
                 </h1>
                 <h2 data-testid="question-text">
-                  {question.question}
+                  {question[questionIndex].question}
                 </h2>
                 <div data-testid="answer-options">
-                  { mathRandom.map((answer, i) => (
-                    answer === question?.correct_answer
+                  { question[questionIndex].answers.map((answer, i) => (
+                    answer === question[questionIndex].correct_answer
                       ? (
                         <button
                           className={ collorGreen }
@@ -165,6 +195,15 @@ class Game extends Component {
                         </button>)
                   ))}
                 </div>
+                { buttonClicked
+                && (
+                  <button
+                    data-testid="btn-next"
+                    onClick={ this.handleNext }
+                  >
+                    Next
+                  </button>
+                )}
               </div>)}
       </div>
     );
