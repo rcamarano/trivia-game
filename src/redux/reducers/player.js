@@ -1,9 +1,10 @@
-import { UPDATE_EMAIL, UPDATE_USERNAME, UPDATE_SCORE } from '../actions';
+import { UPDATE_EMAIL, UPDATE_USERNAME, UPDATE_SCORE, TOTAL_SCORE } from '../actions';
 
 const INITIAL_STATE = {
   email: '',
   userName: '',
   score: 0,
+  correct: 0,
 };
 
 const player = (state = INITIAL_STATE, action) => {
@@ -24,6 +25,12 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       score: state.score + action.score,
+    };
+
+  case TOTAL_SCORE:
+    return {
+      ...state,
+      correct: state.correct + action.correct,
     };
   default:
     return state;

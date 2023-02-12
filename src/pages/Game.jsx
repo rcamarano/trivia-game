@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 import requestGameApi from './requestApi/requestApi';
 import '../App.css';
-import { updateScore } from '../redux/actions';
+import { updateScore, totalScore } from '../redux/actions';
 
 class Game extends Component {
   state = {
@@ -112,8 +112,7 @@ class Game extends Component {
 
     if (id === 'correct') {
       const totalValue = correctAnswer + (timeLeft * gameDifficulty);
-      console.log(timeLeft);
-      console.log(gameDifficulty);
+      dispatch(totalScore(1));
       return dispatch(updateScore(totalValue));
     } if (id === 'wrong') {
       const totalValue = wrongAnswer;

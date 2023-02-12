@@ -1,6 +1,7 @@
 export const UPDATE_EMAIL = 'UPDATE_EMAIL';
 export const UPDATE_USERNAME = 'UPDATE_USERNAME';
 export const UPDATE_SCORE = 'UPDATE_SCORE';
+export const TOTAL_SCORE = 'TOTAL_SCORE';
 
 export const updateEmail = (email) => ({
   type: UPDATE_EMAIL,
@@ -15,4 +16,9 @@ export const updateUsername = (userName) => ({
 export const updateScore = (score) => ({
   type: UPDATE_SCORE,
   score,
+});
+
+export const totalScore = (correct) => ({
+  type: TOTAL_SCORE,
+  correct,
 });
