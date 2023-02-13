@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 
 class Feedback extends Component {
   render() {
-    const { correct } = this.props;
+    const { history, correct } = this.props;
     const rightAswers = 3;
     return (
       <div data-testid="feedback-text">
@@ -18,7 +17,7 @@ class Feedback extends Component {
         </div>
         <button
           data-testid="btn-play-again"
-          onClick={ <Redirect to="/" /> }
+          onClick={ () => history.push('/') }
         >
           <h3>Play Again</h3>
         </button>
@@ -29,6 +28,9 @@ class Feedback extends Component {
 
 Feedback.propTypes = {
   correct: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 const mapStateToProps = (state) => ({
