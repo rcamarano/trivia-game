@@ -1,13 +1,30 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-class Feedback extends Component {
+class Ranking extends Component {
   render() {
+    const { history } = this.props;
     return (
-      <h1 data-testid="ranking-title">
-        Ranking
-      </h1>
+      <div>
+
+        <h1 data-testid="ranking-title">
+          Ranking
+        </h1>
+        <button
+          data-testid="btn-go-home"
+          onClick={ () => history.push('/') }
+        >
+          <h3>Play Again</h3>
+        </button>
+      </div>
     );
   }
 }
 
-export default Feedback;
+Ranking.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
+
+export default Ranking;
