@@ -13,15 +13,22 @@ class Feedback extends Component {
   }
 
   render() {
-    const { history, correct } = this.props;
+    const { history, player } = this.props;
+    console.log(player.assertions);
     const rightAswers = 3;
     return (
       <div data-testid="feedback-text">
         <Header />
         <div>
           {
-            correct >= rightAswers ? 'Well Done!' : 'Could be better...'
+            player.assertions >= rightAswers ? 'Well Done!' : 'Could be better...'
           }
+        </div>
+        <div data-testid="feedback-total-score">
+          { player.score }
+        </div>
+        <div data-testid="feedback-total-question">
+          { player.assertions }
         </div>
         <button
           data-testid="btn-play-again"
@@ -41,15 +48,16 @@ class Feedback extends Component {
 }
 
 Feedback.propTypes = {
-  correct: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
-  player: PropTypes.any,
-}.isRequired;
+  player: PropTypes.shape({
+    assertions: PropTypes.number,
+    score: PropTypes.number,
+  }).isRequired,
+};
 
 const mapStateToProps = (state) => ({
-  correct: state.player.correct,
   player: state.player,
 });
 

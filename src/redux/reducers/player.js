@@ -5,8 +5,6 @@ const INITIAL_STATE = {
   email: '',
   userName: '',
   score: 0,
-  correct: 0,
-  image: 'https://www.gravatar.com/avatar/c19ad9dbaf91c5533605fbf985177ccc',
 };
 
 const player = (state = INITIAL_STATE, action) => {
@@ -33,7 +31,7 @@ const player = (state = INITIAL_STATE, action) => {
   case TOTAL_SCORE:
     return {
       ...state,
-      correct: state.correct + action.correct,
+      assertions: state.assertions + action.assertions,
     };
   case USER_IMAGE:
     return {
