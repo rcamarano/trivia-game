@@ -58,6 +58,10 @@ describe('Teste o componente <Login.js />', () => {
     const botaoPlay = screen.getByTestId(/btn-play/i);
     userEvent.click(botaoPlay);
     act(() => history.push('/Game'));
+
+    const btnSettings = screen.getByTestId(/btn-settings/i);
+    userEvent.click(btnSettings);
+    act(() => history.push('/Config'));
   });
 
   it('teste se requestApi é uma função', () => {

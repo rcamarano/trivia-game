@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { updateEmail, updateUsername } from '../redux/actions';
 import requestToken from './requestApi/requestToken';
@@ -29,10 +28,10 @@ class Login extends React.Component {
     });
   };
 
-  /*   refresh = () => {
+  refresh = () => {
     const { history } = this.props;
     history.push('/Config');
-  }; */
+  };
 
   handleClick = async (e) => {
     e.preventDefault();
@@ -47,7 +46,6 @@ class Login extends React.Component {
 
   render() {
     const { isValid } = this.state;
-    /* const { history } = this.props; */
     return (
       <div>
         <form data-testid="form">
@@ -76,7 +74,7 @@ class Login extends React.Component {
           <button
             data-testid="btn-settings"
             type="button"
-            onClick={ <Redirect to="/Config" /> }
+            onClick={ this.refresh }
           >
             Configurações
           </button>
