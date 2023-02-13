@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   email: '',
   userName: '',
   score: 0,
-  correct: 0,
+  assertions: 0,
 };
 
 const player = (state = INITIAL_STATE, action) => {
@@ -30,7 +30,7 @@ const player = (state = INITIAL_STATE, action) => {
   case TOTAL_SCORE:
     return {
       ...state,
-      correct: state.correct + action.correct,
+      assertions: state.assertions + action.assertions,
     };
   default:
     return state;

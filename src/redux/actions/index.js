@@ -18,7 +18,7 @@ export const updateScore = (score) => ({
   score,
 });
 
-export const totalScore = (correct) => ({
+export const totalScore = (assertions) => ({
   type: TOTAL_SCORE,
-  correct,
+  assertions,
 });
