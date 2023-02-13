@@ -1,10 +1,12 @@
-import { UPDATE_EMAIL, UPDATE_USERNAME, UPDATE_SCORE, TOTAL_SCORE } from '../actions';
+import { UPDATE_EMAIL, USER_IMAGE,
+  UPDATE_USERNAME, UPDATE_SCORE, TOTAL_SCORE } from '../actions';
 
 const INITIAL_STATE = {
   email: '',
   userName: '',
   score: 0,
   correct: 0,
+  image: 'https://www.gravatar.com/avatar/c19ad9dbaf91c5533605fbf985177ccc',
 };
 
 const player = (state = INITIAL_STATE, action) => {
@@ -13,6 +15,7 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       email: action.email,
+      score: 0,
     };
 
   case UPDATE_USERNAME:
@@ -31,6 +34,11 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       correct: state.correct + action.correct,
+    };
+  case USER_IMAGE:
+    return {
+      ...state,
+      image: state.image,
     };
   default:
     return state;
