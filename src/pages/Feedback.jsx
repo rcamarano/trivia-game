@@ -4,6 +4,14 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 
 class Feedback extends Component {
+  componentDidMount() {
+    const { player } = this.props;
+    const players = JSON.parse(localStorage.getItem('players')) || [];
+    players.push(player);
+    players.sort((a, b) => b.score - a.score);
+    localStorage.setItem('players', JSON.stringify(players));
+  }
+
   render() {
     const { history, player } = this.props;
     console.log(player.assertions);
