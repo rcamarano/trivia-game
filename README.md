@@ -27,8 +27,6 @@ Obrigado por sua visita.!
 - [Node.js](https://nodejs.org/en/)
 - [Express](https://expressjs.com/pt-br/)
 - [MySQL](https://www.mysql.com/)
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
 
 ## Instalação
 
