@@ -34,7 +34,7 @@ Obrigado por sua visita.!
 
 ```bash
 # Clone este repositório
-$ git clone https://github.com/rcamarano/trybers-and-dragons.git
+$ git clone https://github.com/rcamarano/trivia-game.git
 
 # Acesse a pasta do projeto no terminal/cmd
 $ cd trivia-game
