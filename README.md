@@ -13,7 +13,7 @@ Obrigado por sua visita.!
   <p>
     <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/rcamarano/trivia-game?color=blueviolet">
     <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/rcamarano/trivia-game?color=blueviolet">
-    <img alt="GitHub" src="https://img.shields.io/github/license/rcamarano/trivia-game?color=blueviolet">
+    <img alt="GitHub" src="https://img.shields.io/github/license/rcamarano/trivia-game/LICENSE?color=blueviolet">
   </p>
 </div>
 
